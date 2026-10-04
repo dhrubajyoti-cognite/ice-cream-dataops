@@ -1,6 +1,6 @@
-- externalId: ds_icapi
-  name: ice-cream-api
-  description: Dataset for the Ice Cream API extractor, files, and related data
+- externalId: {{ icapi_ds_external_id }}
+  name: Ice Cream Factory Source Data
+  description: Source data from the Ice Cream Factory API and related ingestion resources.
   writeProtected: false
   metadata:
     origin: cognite-toolkit
