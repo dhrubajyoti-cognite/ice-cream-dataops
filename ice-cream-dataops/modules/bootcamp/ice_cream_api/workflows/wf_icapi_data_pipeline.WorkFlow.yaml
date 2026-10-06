@@ -1,0 +1,4 @@
+externalId: wf_icapi_data_pipeline
+description: >-
+  Build the Ice Cream asset hierarchy, contextualize time series to assets,
+  extract datapoints from the Ice Cream API, and calculate OEE time series.

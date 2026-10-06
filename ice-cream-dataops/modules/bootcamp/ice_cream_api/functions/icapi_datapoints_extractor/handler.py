@@ -22,6 +22,18 @@ def batcher(iterable, batch_size):
         yield batch
 
 
+def _datapoint_timestamp_ms(ts) -> float | None:
+    if ts is None:
+        return None
+    if isinstance(ts, datetime):
+        if ts.tzinfo is None:
+            ts = ts.replace(tzinfo=timezone.utc)
+        return ts.timestamp() * 1000
+    if isinstance(ts, (list, tuple)):
+        return float(ts[0])
+    return float(ts)
+
+
 def get_time_series_for_site(client: CogniteClient, site):
     this_site = site.lower()
     sub_tree_root = client.data_modeling.instances.retrieve_nodes(
@@ -141,7 +153,8 @@ def handle(client: CogniteClient = None, data=None):
             to_insert = []
             for ts in time_series:
                 # figure out the window of datapoints to pull for this Time Series
-                latest = latest_dps[ts.external_id][0] if not backfill and latest_dps.get(ts.external_id) else None
+                raw_latest = latest_dps.get(ts.external_id) if not backfill else None
+                latest = _datapoint_timestamp_ms(raw_latest) if raw_latest is not None else None
 
                 start = latest if latest else now - increment
                 end = now
